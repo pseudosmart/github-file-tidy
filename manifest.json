@@ -1,0 +1,22 @@
+{
+  "name": "GitHub File Tidier",
+  "version": "1.0",
+  "description": "A lightweight extension for hidding regex matched changed files in PRs",
+  "manifest_version": 2,
+  "author": "Sam Smart",
+  "homepage_url": "https://github.com/samsmarthx",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "background": {
+    "scripts": [
+      "tidier.js"
+    ],
+    "persistent": false
+  },
+  "options_page": "options.html",
+  "browser_action": {
+    "default_popup": "controlPanel.html"
+  }
+}
