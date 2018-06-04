@@ -3,16 +3,49 @@
     <head>
       <style>
         button {
-          height: 200px;
-          width: 300px;
+          height: 20px;
+          width: 50px;
           outline: none;
+        }
+        table {
+          width: 100%;
+        }
+        .regexHide {
+          display: none;
+        }
+        .extensionHide {
+          display: none;
         }
       </style>
     </head>
     <body>
-      <button id="changeColor"></button>
-      <button id="test"></button>
-      <script src="color.js"></script>
+      <table>
+        <tr>
+          <th></th>
+          <th>Hide</th>
+          <th>Show</th>
+        </tr>
+        <tr>
+          <td><i>.less</i></td>
+          <td><button id="less_hide" class="show_hide_buttons" style="background-color: #E74C3C"/></td>
+          <td><button id="less_show" class="show_hide_buttons" style="background-color: #27AE60"/></td>
+        </tr>
+        <tr>
+          <td><i>.js</i></td>
+          <td><button id="js_hide" class="show_hide_buttons" style="background-color: #E74C3C"/></td>
+          <td><button id="js_show" class="show_hide_buttons" style="background-color: #27AE60"/></td>
+        </tr>
+        <tr>
+          <td><i>.jsx</i></td>
+          <td><button id="jsx_hide" class="show_hide_buttons" style="background-color: #E74C3C"/></td>
+          <td><button id="jsx_show" class="show_hide_buttons" style="background-color: #27AE60"/></td>
+        </tr>
+      </table>
+      <br>
+      <form id="regex_form">
+        <input type="text" id="show_hide_regex_form" name="show_hide_regex" style="width:60%">
+        <input type="submit" value="" class="show_hide_regex" style="background-color: #E74C3C; width: 30%">
+      </form>
       <script src="test.js"></script>
     </body>
   </html>

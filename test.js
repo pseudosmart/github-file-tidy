@@ -1,28 +1,57 @@
-document.getElementById("test").addEventListener('click', () => {
-  console.log("Popup DOM fully loaded and parsed");
+let hiddenValues = ''
 
-  function modifyDOM() {
-    //You can play with your DOM here or check URL against your regex
-    console.log('Tab script:');
-    console.log(document.body);
-    // console.log('Checking files:', document.querySelectorAll("div.file-header"))
-    let files = document.querySelectorAll("div.file-header")
-    files.forEach((file) => {
-      console.log('file', file)
-      if (file.dataset.path.includes('.hbs')) {
-        console.log('less file', file)
-        file.parentNode.setAttribute("hidden", true)
-      }
-    })
-    return document.body.innerHTML;
-  }
+function modifyDOM(selector, action) {
+  let files = document.querySelectorAll("div.file-header")
+  files.forEach((file) => {
+    if (file.dataset.path.match(`${selector}$`)) {
+      file.parentNode.style.display = action === 'hide' ? 'none' : 'block'
+    }
+  })
+  return document.body.innerHTML;
+}
 
-  //We have permission to access the activeTab, so we can call chrome.tabs.executeScript:
-  chrome.tabs.executeScript({
-    code: '(' + modifyDOM + ')();' //argument here is a string but function.toString() returns function's code
-  }, (results) => {
-    //Here we have just the innerHTML and not DOM structure
-    console.log('Popup script:')
-    console.log(results[0]);
+function showAll() {
+  let files = document.querySelectorAll("div.file-header")
+  files.forEach((file) => {
+    if (file.parentNode.style.display === 'none') {
+      file.parentNode.style.display = 'block'
+    }
+  })
+  return document.body.innerHTML;
+}
+
+function run () {
+  chrome.storage.sync.get(['regex'], function (result) {
+    document.getElementById('show_hide_regex_form').value = result.regex
   });
-});
+  let buttons = document.getElementsByClassName("show_hide_buttons")
+  Array.prototype.filter.call(buttons, function (button) {
+     button.addEventListener('click', () => {
+       let selector = button.id.split('_')[0]
+      let action = button.id.split('_')[1]
+
+      chrome.tabs.executeScript({
+        code: `(${modifyDOM})('.*\.${selector}', '${action}');`
+      });
+    });
+  });
+};
+
+window.onload = function () {
+  this.run();
+}
+
+document.getElementById("regex_form").addEventListener('submit', (e) => {
+  e.preventDefault();
+  chrome.tabs.executeScript({
+    code: `(${showAll})();`
+  });
+
+  let regexValue = document.getElementById('show_hide_regex_form').value
+  if (!regexValue) return;
+  
+  chrome.storage.sync.set({ regex: regexValue });
+  chrome.tabs.executeScript({
+    code: `(${modifyDOM})('${regexValue}', 'hide');`
+  });
+})
